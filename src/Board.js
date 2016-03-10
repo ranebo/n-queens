@@ -163,16 +163,15 @@
       var colIndex = minorDiagonalColumnIndexAtFirstRow;
       var numPlayers1 = 0;
       var numPlayers2 = 0;
-      for (var i = 1; i < this.rows().length - colIndex; i++) {
-        console.log("i is ROW: ", i, colIndex - i);
-        console.log("i is Column: ", colIndex - i, i);
-        if (this._isInBounds([i], [colIndex - i]) && this._isInBounds([colIndex - i], [i])) {
-          numPlayers1 = numPlayers1 + this.rows()[i][colIndex - i] + this.rows()[colIndex - i][i];
-        }
-        if (this._isInBounds([i], [colIndex + i]) && this._isInBounds([colIndex + i], [i])) {
-          numPlayers2 = numPlayers2 + this.rows()[i][colIndex + i] + this.rows()[colIndex + i][i];
-        }
+
+      for (var i = 0; i <= colIndex; i++) {
+        numPlayers1 = numPlayers1 + this.rows()[i][colIndex - i];
       }
+      
+      for (var i = 0; i <= colIndex; i++) {
+        numPlayers2 = numPlayers2 + this.rows()[this.rows().length - colIndex - 1 + i][this.rows().length - 1 - i];
+      }
+      
       if (numPlayers1 > 1 || numPlayers2 > 1) {
         return true;
       }
