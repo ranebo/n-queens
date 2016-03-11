@@ -60,19 +60,16 @@ window.countNRooksSolutions = function(n) {
   var helper = function(n, row) {
 
     if (n - row === 1) {
-      //solution.togglePiece(row, i);
       solutionCount++;
       return;
     }
 
     for (var i = 0; i < n; i++) {
       solution.togglePiece(row, i);
-      if (solution.hasAnyRooksConflicts()) {
-        solution.togglePiece(row, i);
-      } else {
+      if (!solution.hasAnyRooksConflicts()) {
         helper(n, row + 1);
-        solution.togglePiece(row, i);
       }
+      solution.togglePiece(row, i);
 
     }
   };
@@ -93,7 +90,7 @@ window.findNQueensSolution = function(n) {
     }
 
     for (var i = 0; i < n; i++) {
-      board.togglePiece(row,i);
+      board.togglePiece(row, i);
       if (!board.hasAnyQueensConflicts()) {
         var result = helper(n, row + 1, board);
         if (result) {
@@ -106,45 +103,6 @@ window.findNQueensSolution = function(n) {
   var solution = helper(n, 0, board);
   solution = solution || board.rows();
 
-
-
- //  var solution = new Board({'n': n});
- //  var randIndexs = _.range(0, n);
- //  var colNum = n;
-
-
- // // var helper = function(n) {
- //  //   if (n) {
- //  //     var newRow = _.range(0, colNum).map(function(i) {
- //  //       return 0;
- //  //     });
- //  //     solution.set(n - 1, newRow);
-
- //  //     var shuffRandIndexs = _.shuffle(randIndexs);
- //  //     indexsUsed = indexsUsed || {};
- //  //     indexsUsed[n - 1] = indexsUsed[n - 1] || [];
- //  //     for (var i = 0; i < shuffRandIndexs.length; i++) {
- //  //       if ( shuffRanIndexs)
- //  //         solution.togglePiece(n - 1, shuffRandIndexs[i]);
- //  //         if (!solution.hasAnyQueenConflictsOn(n - 1, shuffRandIndexs[i])) {
- //  //           randIndexs.splice(randIndexs.indexOf(shuffRandIndexs[i]), 1);
- //  //           indexsUsed[n - 1].push(shuffRandIndexs[i]);
- //  //           helper(n - 1);
- //  //           return;
- //  //         } else {
- //  //           solution.togglePiece(n - 1, shuffRandIndexs[i]);
- //  //         }
- //  //     }
-
- //  //     if (indexsUsed[n-1].length === colNum) {
- //  //       helper(colNum, indexsUsed);
- //  //     }
- //  //     helper(n - 1);
- //  //   }
- //  //  };
- //  // helper(n);
-
- //  // console.log(solution.rows())
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
@@ -153,25 +111,25 @@ window.findNQueensSolution = function(n) {
 window.countNQueensSolutions = function(n) {
   var solution = new Board({'n': n});
   solutionCount = 0;
-  var helper = function(n, row) {
+  var helper = function(n, row, solution) {
 
-    if (n - row === 1) {
+    if (n === row) {
       solutionCount++;
       return;
     }
 
     for (var i = 0; i < n; i++) {
       solution.togglePiece(row, i);
-      if (solution.hasAnyQueensConflicts()) {
-        solution.togglePiece(row, i);
-      } else {
-        helper(n, row + 1);
-        solution.togglePiece(row, i);
-      }
-
+      if (!solution.hasAnyQueensConflicts()) {
+        var result = helper(n, row + 1, solution);
+        if (result) {
+          return result;
+        }
+      } 
+      solution.togglePiece(row, i);
     }
   };
-  helper(n, 0);
+  helper(n, 0, solution);
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
